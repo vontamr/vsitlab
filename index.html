@@ -41,7 +41,7 @@
       position: fixed;
       inset: 0;
       z-index: 0;
-      background: url('assets/image-1.jpg') center center / cover no-repeat;
+      background: url('galaxy-bg.jpg') center center / cover no-repeat;
       transform: scale(1.12);
       animation: cosmos-breathe 28s ease-in-out infinite alternate;
     }
@@ -248,6 +248,154 @@
       opacity: 1 !important;
       transform: translateY(0) !important;
     }
+
+    /* ===== LAB ACTION CARDS ===== */
+    .lab-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .lab-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(105deg, transparent 40%, rgba(129,140,248,0.06) 45%, rgba(167,139,250,0.08) 50%, transparent 55%);
+      background-size: 250% 100%;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .lab-card:hover::before {
+      opacity: 1;
+      animation: lab-shimmer 1.8s ease-in-out infinite;
+    }
+    @keyframes lab-shimmer {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    /* Scan line */
+    .lab-card .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(129,140,248,0.9), rgba(192,132,252,0.7), transparent);
+      box-shadow: 0 0 12px 2px rgba(129,140,248,0.45);
+      opacity: 0;
+      top: -2px;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .lab-card:hover .scan-line {
+      opacity: 1;
+      animation: lab-scan 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes lab-scan {
+      0% { top: 0; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* Grid overlay */
+    .lab-card .lab-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(129,140,248,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(129,140,248,0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .lab-card:hover .lab-grid {
+      opacity: 1;
+    }
+
+    /* Energy border glow */
+    .lab-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(129,140,248,0.5), transparent 40%, transparent 60%, rgba(192,132,252,0.4));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .lab-card:hover::after {
+      opacity: 1;
+    }
+
+    /* Status terminal line */
+    .lab-status {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: rgba(129,140,248,0.0);
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      margin-top: 0;
+    }
+    .lab-card:hover .lab-status {
+      color: rgba(167,139,250,0.75);
+      max-height: 24px;
+      margin-top: 14px;
+    }
+    .lab-status .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* Live badge pulse stronger on lab cards */
+    .lab-card .live-badge {
+      position: relative;
+    }
+    .lab-card .live-badge::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 9999px;
+      border: 1px solid rgba(52,211,153,0.4);
+      opacity: 0;
+      animation: none;
+    }
+    .lab-card:hover .live-badge::before {
+      animation: live-ring 1.4s ease-out infinite;
+    }
+    @keyframes live-ring {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    /* Number glow */
+    .lab-card .lab-num {
+      transition: text-shadow 0.3s ease, color 0.3s ease;
+    }
+    .lab-card:hover .lab-num {
+      color: #a5b4fc;
+      text-shadow: 0 0 12px rgba(129,140,248,0.7);
+    }
+
+    .lab-card-content {
+      position: relative;
+      z-index: 4;
+    }
+
   </style>
 </head>
 <body class="font-sans text-white antialiased">
@@ -329,40 +477,64 @@
         </div>
 
         <div class="grid sm:grid-cols-2 gap-5">
-          <div class="glass group p-7 rounded-2xl">
-            <div class="flex items-start justify-between mb-5">
-              <span class="font-mono text-xs text-indigo-400/90">01</span>
-              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+          <!-- 01 -->
+          <div class="glass lab-card group p-7 rounded-2xl">
+            <div class="scan-line"></div>
+            <div class="lab-grid"></div>
+            <div class="lab-card-content">
+              <div class="flex items-start justify-between mb-5">
+                <span class="font-mono text-xs text-indigo-400/90 lab-num">01</span>
+                <span class="live-badge text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+              </div>
+              <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Deploy production agents</h3>
+              <p class="text-sm text-white/40 leading-relaxed">AI agents that run in real systems — not demos. Connected to your tools, your data, your customers.</p>
+              <div class="lab-status">> system.agent.deploy — online<span class="cursor-blink">_</span></div>
             </div>
-            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Deploy production agents</h3>
-            <p class="text-sm text-white/40 leading-relaxed">AI agents that run in real systems — not demos. Connected to your tools, your data, your customers.</p>
           </div>
 
-          <div class="glass group p-7 rounded-2xl">
-            <div class="flex items-start justify-between mb-5">
-              <span class="font-mono text-xs text-indigo-400/90">02</span>
-              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+          <!-- 02 -->
+          <div class="glass lab-card group p-7 rounded-2xl">
+            <div class="scan-line"></div>
+            <div class="lab-grid"></div>
+            <div class="lab-card-content">
+              <div class="flex items-start justify-between mb-5">
+                <span class="font-mono text-xs text-indigo-400/90 lab-num">02</span>
+                <span class="live-badge text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+              </div>
+              <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Ship AI copilots</h3>
+              <p class="text-sm text-white/40 leading-relaxed">Copilots that sit inside real products. Code, support, ops, sales — wherever the leverage is.</p>
+              <div class="lab-status">> copilots.attach — active<span class="cursor-blink">_</span></div>
             </div>
-            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Ship AI copilots</h3>
-            <p class="text-sm text-white/40 leading-relaxed">Copilots that sit inside real products. Code, support, ops, sales — wherever the leverage is.</p>
           </div>
 
-          <div class="glass group p-7 rounded-2xl">
-            <div class="flex items-start justify-between mb-5">
-              <span class="font-mono text-xs text-indigo-400/90">03</span>
-              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+          <!-- 03 -->
+          <div class="glass lab-card group p-7 rounded-2xl">
+            <div class="scan-line"></div>
+            <div class="lab-grid"></div>
+            <div class="lab-card-content">
+              <div class="flex items-start justify-between mb-5">
+                <span class="font-mono text-xs text-indigo-400/90 lab-num">03</span>
+                <span class="live-badge text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+              </div>
+              <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Automate the boring shit</h3>
+              <p class="text-sm text-white/40 leading-relaxed">Turn repetitive workflows into intelligent systems that actually run without you babysitting them.</p>
+              <div class="lab-status">> workflow.automate — running<span class="cursor-blink">_</span></div>
             </div>
-            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Automate the boring shit</h3>
-            <p class="text-sm text-white/40 leading-relaxed">Turn repetitive workflows into intelligent systems that actually run without you babysitting them.</p>
           </div>
 
-          <div class="glass group p-7 rounded-2xl">
-            <div class="flex items-start justify-between mb-5">
-              <span class="font-mono text-xs text-indigo-400/90">04</span>
-              <span class="text-[10px] uppercase tracking-wider text-indigo-300/90 bg-indigo-400/10 px-2.5 py-0.5 rounded-full border border-indigo-400/25">Web</span>
+          <!-- 04 -->
+          <div class="glass lab-card group p-7 rounded-2xl">
+            <div class="scan-line"></div>
+            <div class="lab-grid"></div>
+            <div class="lab-card-content">
+              <div class="flex items-start justify-between mb-5">
+                <span class="font-mono text-xs text-indigo-400/90 lab-num">04</span>
+                <span class="text-[10px] uppercase tracking-wider text-indigo-300/90 bg-indigo-400/10 px-2.5 py-0.5 rounded-full border border-indigo-400/25">Web</span>
+              </div>
+              <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Plan & build websites</h3>
+              <p class="text-sm text-white/40 leading-relaxed">From idea to live site. We plan the architecture, design the system, and ship the website or tool with you.</p>
+              <div class="lab-status">> site.build — compiling<span class="cursor-blink">_</span></div>
             </div>
-            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Plan & build websites</h3>
-            <p class="text-sm text-white/40 leading-relaxed">From idea to live site. We plan the architecture, design the system, and ship the website or tool with you.</p>
           </div>
         </div>
       </div>
@@ -549,25 +721,137 @@
             </div>
           </div>
         </div>
+
+        <!-- Early Access + Email -->
+        <div class="mt-16 glass rounded-2xl p-8 sm:p-10 max-w-xl">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Beta</span>
+            <span class="text-xs text-white/40">Creator Tools</span>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Get early access</h3>
+          <p class="text-sm text-white/45 mb-6 leading-relaxed">
+            Be first in line when the Content Planning System and One-to-Many Repurposing tools open. We’ll notify you by email.
+          </p>
+          <form action="https://formspree.io/f/mdenkran" method="POST" class="flex flex-col sm:flex-row gap-3">
+            <input type="email" name="email" required placeholder="you@email.com"
+              class="flex-1 px-4 py-3 rounded-full bg-white/5 border border-white/10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-indigo-500/50 transition" />
+            <input type="hidden" name="_subject" value="VSIT Labs — Creator Tools Waitlist" />
+            <button type="submit"
+              class="px-6 py-3 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium transition whitespace-nowrap">
+              Join waitlist
+            </button>
+          </form>
+        </div>
+
+        <!-- AI Chat Beta -->
+        <div class="mt-8 glass rounded-2xl p-6 sm:p-8 max-w-xl">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-[10px] uppercase tracking-wider text-indigo-300 bg-indigo-500/15 px-2.5 py-0.5 rounded-full border border-indigo-500/25">Beta</span>
+            <span class="text-xs text-white/40">AI Chat</span>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">AI Chat — early access</h3>
+          <p class="text-sm text-white/45 mb-5 leading-relaxed">
+            A private AI chat trained for creators and builders. Currently in closed beta.
+          </p>
+          <a href="mailto:hello@vsitlabs.com?subject=AI%20Chat%20Beta%20Access" class="inline-flex items-center text-sm text-indigo-300 hover:text-indigo-200 transition">
+            Request beta access →
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- Hardware -->
+    <!-- Hardware / Shop -->
     <section id="hardware" class="py-28">
       <div class="max-w-5xl mx-auto px-6">
-        <div class="mb-16">
+        <div class="mb-12">
           <p class="text-indigo-300 text-sm font-medium tracking-wide mb-3">Hardware</p>
           <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Custom systems.</h2>
+          <p class="text-white/45 mt-4 max-w-xl text-sm leading-relaxed">
+            Built for creators and power users. Clean, no bloat, focused on real performance.
+          </p>
         </div>
 
-        <div class="glass p-8 sm:p-10 rounded-2xl max-w-2xl">
-          <h3 class="text-xl font-semibold mb-3">Performance builds</h3>
-          <p class="text-white/45 text-sm leading-relaxed mb-6">
-            Custom PCs engineered for creators, developers, and power users. Clean builds, no bloat, focused on real performance.
-          </p>
-          <a href="#contact" class="inline-flex items-center text-sm text-indigo-300 hover:text-indigo-200 transition">
-            Inquire about a build →
-          </a>
+        <!-- Shop grid -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Product 1: Creator -->
+          <div class="glass rounded-2xl overflow-hidden flex flex-col group">
+            <div class="aspect-[4/3] bg-black/40 border-b border-white/5 overflow-hidden relative">
+              <img src="assets/pc/creator.jpg" alt="Creator PC Build" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5 flex flex-col flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] uppercase tracking-wider text-white/35">PC Build</span>
+              </div>
+              <h3 class="text-lg font-semibold text-white/95 mb-1">Creator</h3>
+              <p class="text-2xl font-bold text-white mb-3">$1,199</p>
+              <ul class="text-xs text-white/40 space-y-1.5 mb-5 flex-1">
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> Ryzen mid-range + RTX</li>
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> 32GB RAM · Fast NVMe</li>
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> 1440p editing & streaming</li>
+              </ul>
+              <a href="https://buy.stripe.com/5kQ7sM6s32X61H8fXv0ZW06" target="_blank" rel="noopener"
+                class="w-full text-center px-4 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium transition">
+                Buy now
+              </a>
+            </div>
+          </div>
+
+          <!-- Product 2: Pro Creator (Popular) -->
+          <div class="glass rounded-2xl overflow-hidden flex flex-col group border border-indigo-500/25 relative">
+            <div class="absolute top-3 left-3 z-10">
+              <span class="text-[10px] uppercase tracking-wider text-indigo-200 bg-indigo-500/30 border border-indigo-400/30 px-2.5 py-1 rounded-full">Popular</span>
+            </div>
+            <div class="aspect-[4/3] bg-black/40 border-b border-white/5 overflow-hidden relative">
+              <img src="assets/pc/pro-creator.jpg" alt="Pro Creator PC Build" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5 flex flex-col flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] uppercase tracking-wider text-white/35">PC Build</span>
+              </div>
+              <h3 class="text-lg font-semibold text-white/95 mb-1">Pro Creator</h3>
+              <p class="text-2xl font-bold text-white mb-3">$1,899</p>
+              <ul class="text-xs text-white/40 space-y-1.5 mb-5 flex-1">
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> Higher-tier GPU + more cores</li>
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> 4K capable timelines</li>
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> Multitasking & long sessions</li>
+              </ul>
+              <a href="https://buy.stripe.com/00w8wQ8AbbtCadE8v30ZW07" target="_blank" rel="noopener"
+                class="w-full text-center px-4 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium transition shadow-lg shadow-indigo-500/20">
+                Buy now
+              </a>
+            </div>
+          </div>
+
+          <!-- Product 3: Flagship -->
+          <div class="glass rounded-2xl overflow-hidden flex flex-col group">
+            <div class="aspect-[4/3] bg-black/40 border-b border-white/5 overflow-hidden relative">
+              <img src="assets/pc/flagship.jpg" alt="Flagship PC Build" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-5 flex flex-col flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] uppercase tracking-wider text-white/35">PC Build</span>
+              </div>
+              <h3 class="text-lg font-semibold text-white/95 mb-1">Flagship</h3>
+              <p class="text-2xl font-bold text-white mb-3">$2,799</p>
+              <ul class="text-xs text-white/40 space-y-1.5 mb-5 flex-1">
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> Top-tier components</li>
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> 4K / 8K · 3D · AI workloads</li>
+                <li class="flex gap-2"><span class="text-indigo-400/70">▸</span> Future-proof performance</li>
+              </ul>
+              <a href="https://buy.stripe.com/6oU3cw6s3cxGgC23aJ0ZW08" target="_blank" rel="noopener"
+                class="w-full text-center px-4 py-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium transition">
+                Buy now
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Shop footer note -->
+        <div class="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs text-white/30">
+          <p>Custom configs available · $900–$3,000 range · Secure checkout</p>
+          <p>Secure checkout via Stripe</p>
         </div>
       </div>
     </section>
@@ -579,7 +863,7 @@
           <p class="text-indigo-300 text-sm font-medium tracking-wide mb-4">About</p>
           <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-6">Built for people who ship.</h2>
           <p class="text-white/50 leading-relaxed text-lg">
-            Not another agency. A lab that builds real AI systems, websites, tools, and hardware — helping small teams move faster with actual engineering craft.
+            Not another agency. A lab that builds real AI systems, websites, creator tools, and custom PCs — helping people ship faster with actual engineering craft.
           </p>
         </div>
       </div>
@@ -597,7 +881,7 @@
             </div>
             <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-5">Ready to ship something real?</h2>
             <p class="text-white/50 mb-9 max-w-md mx-auto">
-              Website, tool, AI system, creator workflow, or custom PC — tell us what you want to build.
+              Custom software, creator tools, or order a PC — tell us what you need. We’ll help you plan it and ship it.
             </p>
             <a href="mailto:hello@vsitlabs.com?subject=I%20want%20to%20plan%20a%20build" class="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium cta-glow">
               hello@vsitlabs.com
