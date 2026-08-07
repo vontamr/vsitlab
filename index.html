@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VSIT Labs | Software Engineering, Rebuilt</title>
+  <meta name="description" content="VSIT Labs is where real software engineering comes alive again — powered by AI, built for production. Websites, systems, and tools that ship." />
+  <meta name="author" content="VSIT Labs" />
+  <meta property="og:title" content="VSIT Labs | Software Engineering, Rebuilt" />
+  <meta property="og:description" content="Where real software engineering comes alive again — powered by AI." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vsitlabs.com" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VSIT Labs | Software Engineering, Rebuilt" />
+  <meta name="twitter:description" content="Where real software engineering comes alive again — powered by AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            lab: { 950: '#05050a', 900: '#0a0a12', 800: '#12121c' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #05050a;
+      overflow-x: hidden;
+    }
+
+    /* Full-page galaxy with slow living motion */
+    .cosmos {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: url('assets/image-1.jpg') center center / cover no-repeat;
+      transform: scale(1.12);
+      animation: cosmos-breathe 28s ease-in-out infinite alternate;
+    }
+    @keyframes cosmos-breathe {
+      0% { transform: scale(1.10) translate(0, 0); }
+      100% { transform: scale(1.18) translate(-1.5%, -1%); }
+    }
+
+    .cosmos-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% 0%, rgba(99,102,241,0.18) 0%, transparent 55%),
+        linear-gradient(to bottom,
+          rgba(5,5,10,0.28) 0%,
+          rgba(5,5,10,0.48) 22%,
+          rgba(5,5,10,0.74) 50%,
+          rgba(5,5,10,0.90) 78%,
+          #05050a 100%);
+      pointer-events: none;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--d) ease-in-out infinite;
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.25); }
+      35% { opacity: var(--o); transform: scale(1.25); }
+      65% { opacity: var(--o); transform: scale(1); }
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(50px);
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 2;
+      animation: drift var(--dur) ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(var(--tx), var(--ty)) scale(1.18); }
+    }
+
+    .content { position: relative; z-index: 10; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 45%, #f0abfc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .live-dot {
+      box-shadow: 0 0 0 0 rgba(129,140,248,0.7);
+      animation: live-pulse 1.8s infinite;
+    }
+    @keyframes live-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(129,140,248,0.7); }
+      70% { box-shadow: 0 0 0 12px rgba(129,140,248,0); }
+      100% { box-shadow: 0 0 0 0 rgba(129,140,248,0); }
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .glass:hover {
+      background: rgba(99,102,241,0.10);
+      border-color: rgba(129,140,248,0.40);
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px -12px rgba(99,102,241,0.30);
+    }
+
+    .nav-glass {
+      background: rgba(5,5,10,0.55);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .cta-glow {
+      box-shadow: 0 0 35px rgba(99,102,241,0.40);
+      transition: all 0.3s ease;
+    }
+    .cta-glow:hover {
+      box-shadow: 0 0 55px rgba(99,102,241,0.60);
+      transform: translateY(-2px);
+    }
+
+    .float-label {
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ===== ADVANCED DEMO ===== */
+    .demo-stage {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .demo-stage.fade-out {
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+    }
+    .demo-stage .idea-chip,
+    .demo-stage .ranked-item,
+    .demo-stage .outline-block,
+    .demo-stage .calendar-block {
+      transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .demo-stage .idea-chip.visible,
+    .demo-stage .ranked-item.visible,
+    .demo-stage .outline-block.visible,
+    .demo-stage .calendar-block.visible {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    /* AI Cursor */
+    .ai-cursor {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      pointer-events: none;
+      z-index: 50;
+      transition: transform 0.08s linear;
+      opacity: 0;
+    }
+    .ai-cursor.visible { opacity: 1; }
+    .ai-cursor svg {
+      filter: drop-shadow(0 0 6px rgba(129,140,248,0.85));
+    }
+    .ai-cursor.clicking svg {
+      transform: scale(0.82);
+      transition: transform 0.12s ease;
+    }
+    .ai-cursor .click-ring {
+      position: absolute;
+      inset: -6px;
+      border: 2px solid rgba(129,140,248,0.6);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    .ai-cursor.clicking .click-ring {
+      animation: click-burst 0.45s ease-out forwards;
+    }
+    @keyframes click-burst {
+      0% { opacity: 0.9; transform: scale(0.4); }
+      100% { opacity: 0; transform: scale(1.6); }
+    }
+
+    /* Thinking pulse */
+    .ai-thinking {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .ai-thinking span {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #818cf8;
+      animation: think 1.1s ease-in-out infinite;
+    }
+    .ai-thinking span:nth-child(2) { animation-delay: 0.15s; }
+    .ai-thinking span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes think {
+      0%, 100% { opacity: 0.25; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Rank flash */
+    .rank-flash {
+      animation: rankPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes rankPop {
+      0% { transform: scale(0.92); box-shadow: 0 0 0 0 rgba(99,102,241,0.4); }
+      60% { transform: scale(1.03); box-shadow: 0 0 20px 4px rgba(99,102,241,0.25); }
+      100% { transform: scale(1); box-shadow: none; }
+    }
+
+    .demo-stage .source-block.visible,
+    .demo-stage .extract-item.visible,
+    .demo-stage .output-card.visible {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+  </style>
+</head>
+<body class="font-sans text-white antialiased">
+
+  <div class="cosmos"></div>
+  <div class="cosmos-overlay"></div>
+  <div class="stars" id="stars"></div>
+
+  <!-- Stronger drifting orbs -->
+  <div class="orb" style="width:520px;height:520px;background:#6366f1;top:2%;left:-10%;--tx:140px;--ty:70px;--dur:12s;"></div>
+  <div class="orb" style="width:420px;height:420px;background:#a855f7;top:45%;right:-12%;--tx:-110px;--ty:-80px;--dur:15s;"></div>
+  <div class="orb" style="width:340px;height:340px;background:#06b6d4;bottom:2%;left:20%;--tx:80px;--ty:-100px;--dur:17s;opacity:0.25;"></div>
+  <div class="orb" style="width:260px;height:260px;background:#818cf8;top:25%;left:50%;--tx:-60px;--ty:70px;--dur:19s;opacity:0.20;"></div>
+  <div class="orb" style="width:200px;height:200px;background:#c084fc;bottom:30%;right:15%;--tx:50px;--ty:-40px;--dur:14s;opacity:0.18;"></div>
+
+  <div class="content">
+
+    <!-- Nav -->
+    <nav class="fixed top-0 w-full z-50 nav-glass border-b border-white/5">
+      <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2.5 group">
+          <div class="w-7 h-7 rounded-md bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center group-hover:border-indigo-400/70 transition">
+            <svg class="w-3.5 h-3.5 text-indigo-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <span class="font-semibold tracking-tight text-[15px]">VSIT <span class="text-indigo-400">Labs</span></span>
+        </a>
+        <div class="flex items-center gap-6 text-sm">
+          <div class="hidden sm:flex items-center gap-6 text-white/50">
+            <a href="#actions" class="hover:text-white transition">Actions</a>
+            <a href="#creators" class="hover:text-white transition">Creators</a>
+            <a href="#hardware" class="hover:text-white transition">Hardware</a>
+            <a href="#about" class="hover:text-white transition">About</a>
+          </div>
+          <a href="#contact" class="text-indigo-300 hover:text-indigo-200 transition font-medium">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative min-h-screen flex items-center pt-14">
+      <div class="max-w-5xl mx-auto px-6 w-full">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/70 mb-9 backdrop-blur-md float-label">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 live-dot"></span>
+            Lab online · AI systems active
+          </div>
+
+          <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-7">
+            Real engineering<br />
+            <span class="gradient-text">is coming back.</span>
+          </h1>
+
+          <p class="text-lg sm:text-xl text-white/55 max-w-xl mb-11 leading-relaxed">
+            Production AI. Real systems. Websites & tools that actually ship.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a href="#contact" class="inline-flex items-center justify-center px-7 py-3.5 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium cta-glow">
+              Start building
+            </a>
+            <a href="#actions" class="inline-flex items-center justify-center px-7 py-3.5 rounded-full border border-white/15 hover:border-white/30 text-white/80 hover:text-white text-sm transition backdrop-blur-sm">
+              See AI actions →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Actions -->
+    <section id="actions" class="py-28">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="mb-16">
+          <p class="text-indigo-300 text-sm font-medium tracking-wide mb-3">AI Actions</p>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">What the lab actually does.</h2>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div class="glass group p-7 rounded-2xl">
+            <div class="flex items-start justify-between mb-5">
+              <span class="font-mono text-xs text-indigo-400/90">01</span>
+              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Deploy production agents</h3>
+            <p class="text-sm text-white/40 leading-relaxed">AI agents that run in real systems — not demos. Connected to your tools, your data, your customers.</p>
+          </div>
+
+          <div class="glass group p-7 rounded-2xl">
+            <div class="flex items-start justify-between mb-5">
+              <span class="font-mono text-xs text-indigo-400/90">02</span>
+              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Ship AI copilots</h3>
+            <p class="text-sm text-white/40 leading-relaxed">Copilots that sit inside real products. Code, support, ops, sales — wherever the leverage is.</p>
+          </div>
+
+          <div class="glass group p-7 rounded-2xl">
+            <div class="flex items-start justify-between mb-5">
+              <span class="font-mono text-xs text-indigo-400/90">03</span>
+              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Live</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Automate the boring shit</h3>
+            <p class="text-sm text-white/40 leading-relaxed">Turn repetitive workflows into intelligent systems that actually run without you babysitting them.</p>
+          </div>
+
+          <div class="glass group p-7 rounded-2xl">
+            <div class="flex items-start justify-between mb-5">
+              <span class="font-mono text-xs text-indigo-400/90">04</span>
+              <span class="text-[10px] uppercase tracking-wider text-indigo-300/90 bg-indigo-400/10 px-2.5 py-0.5 rounded-full border border-indigo-400/25">Web</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2.5 group-hover:text-indigo-200 transition">Plan & build websites</h3>
+            <p class="text-sm text-white/40 leading-relaxed">From idea to live site. We plan the architecture, design the system, and ship the website or tool with you.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Creator Tools -->
+    <section id="creators" class="py-28">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="mb-20">
+          <p class="text-indigo-300 text-sm font-medium tracking-wide mb-3">For Content Creators</p>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">Tools built for people who create.</h2>
+        </div>
+
+        <!-- ========== TOOL 1: Content Planning ========== -->
+        <div class="mb-24">
+          <div class="glass group p-7 rounded-2xl mb-8 max-w-2xl">
+            <div class="flex items-start justify-between mb-5">
+              <span class="font-mono text-xs text-indigo-400/90">01</span>
+              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Building</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 group-hover:text-indigo-200 transition">Content Planning System</h3>
+            <p class="text-sm text-white/45 leading-relaxed">
+              Drop in ideas, research, or notes. Get ranked content ideas, platform-specific outlines, and a living calendar that helps you ship consistently.
+            </p>
+          </div>
+
+          <!-- Live demo for Planning -->
+          <div class="mb-3">
+            <p class="text-indigo-300/70 text-xs font-medium tracking-wide uppercase">Live preview</p>
+          </div>
+          <div id="planner-demo" class="glass rounded-2xl p-6 sm:p-8 overflow-hidden relative">
+            <div class="flex items-center gap-3 mb-8 text-xs text-white/40">
+              <span id="stage-label" class="text-indigo-300 font-medium">Step 1 of 3</span>
+              <span class="w-1 h-1 rounded-full bg-white/20"></span>
+              <span id="stage-desc">Dropping in raw ideas...</span>
+            </div>
+
+            <div id="demo-stage-1" class="demo-stage space-y-3">
+              <div class="text-xs text-white/30 mb-3 font-mono">INPUT</div>
+              <div class="space-y-2">
+                <div class="idea-chip opacity-0 translate-y-3 transition-all duration-500 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white/70">
+                  “Why most creators burn out in year 2”
+                </div>
+                <div class="idea-chip opacity-0 translate-y-3 transition-all duration-500 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white/70" style="transition-delay:120ms">
+                  “My exact weekly content system”
+                </div>
+                <div class="idea-chip opacity-0 translate-y-3 transition-all duration-500 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white/70" style="transition-delay:240ms">
+                  “Tools I actually use vs tools I recommend”
+                </div>
+                <div class="idea-chip opacity-0 translate-y-3 transition-all duration-500 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white/70" style="transition-delay:360ms">
+                  “How I batch 12 videos in one day”
+                </div>
+              </div>
+            </div>
+
+            <div id="demo-stage-2" class="demo-stage hidden space-y-3">
+              <div class="text-xs text-white/30 mb-3 font-mono">RANKED IDEAS</div>
+              <div class="space-y-2">
+                <div class="ranked-item opacity-0 translate-y-3 transition-all duration-500 flex items-center justify-between px-4 py-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                  <div class="flex items-center gap-3">
+                    <span class="text-indigo-400 font-mono text-xs">92</span>
+                    <span class="text-sm text-white/80">How I batch 12 videos in one day</span>
+                  </div>
+                  <span class="text-[10px] text-emerald-400/80 uppercase tracking-wider">High leverage</span>
+                </div>
+                <div class="ranked-item opacity-0 translate-y-3 transition-all duration-500 flex items-center justify-between px-4 py-3 rounded-xl bg-white/5 border border-white/10" style="transition-delay:100ms">
+                  <div class="flex items-center gap-3">
+                    <span class="text-indigo-400/70 font-mono text-xs">87</span>
+                    <span class="text-sm text-white/70">My exact weekly content system</span>
+                  </div>
+                  <span class="text-[10px] text-white/40 uppercase tracking-wider">Strong</span>
+                </div>
+                <div class="ranked-item opacity-0 translate-y-3 transition-all duration-500 flex items-center justify-between px-4 py-3 rounded-xl bg-white/5 border border-white/10" style="transition-delay:200ms">
+                  <div class="flex items-center gap-3">
+                    <span class="text-indigo-400/50 font-mono text-xs">74</span>
+                    <span class="text-sm text-white/60">Why most creators burn out in year 2</span>
+                  </div>
+                  <span class="text-[10px] text-white/30 uppercase tracking-wider">Solid</span>
+                </div>
+              </div>
+            </div>
+
+            <div id="demo-stage-3" class="demo-stage hidden">
+              <div class="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <div class="text-xs text-white/30 mb-3 font-mono">OUTLINE · YOUTUBE</div>
+                  <div class="outline-block opacity-0 translate-y-3 transition-all duration-500 space-y-2 text-sm">
+                    <div class="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70">Hook: “I used to film 1 video a week...”</div>
+                    <div class="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60">1. The 3-block system</div>
+                    <div class="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60">2. Batch day setup</div>
+                    <div class="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60">3. What I never do</div>
+                    <div class="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/50">CTA → free template</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-xs text-white/30 mb-3 font-mono">THIS WEEK</div>
+                  <div class="calendar-block opacity-0 translate-y-3 transition-all duration-500 space-y-2 text-sm" style="transition-delay:150ms">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                      <span class="text-[10px] text-indigo-300 w-10">Mon</span>
+                      <span class="text-white/70">Batch 4 shorts</span>
+                    </div>
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
+                      <span class="text-[10px] text-white/40 w-10">Wed</span>
+                      <span class="text-white/60">Long-form: Batch system</span>
+                    </div>
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
+                      <span class="text-[10px] text-white/40 w-10">Fri</span>
+                      <span class="text-white/60">Newsletter + thread</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== TOOL 2: One-to-Many Repurposing ========== -->
+        <div>
+          <div class="glass group p-7 rounded-2xl mb-8 max-w-2xl">
+            <div class="flex items-start justify-between mb-5">
+              <span class="font-mono text-xs text-indigo-400/90">02</span>
+              <span class="text-[10px] uppercase tracking-wider text-emerald-400/90 bg-emerald-400/10 px-2.5 py-0.5 rounded-full border border-emerald-400/20">Building</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3 group-hover:text-indigo-200 transition">One-to-Many Repurposing</h3>
+            <p class="text-sm text-white/45 leading-relaxed">
+              One long piece in. Shorts, threads, carousels, newsletters, and SEO posts out — all in your voice, ready to publish.
+            </p>
+          </div>
+
+          <!-- Live demo for Repurposing -->
+          <div class="mb-3">
+            <p class="text-indigo-300/70 text-xs font-medium tracking-wide uppercase">Live preview</p>
+          </div>
+          <div id="repurpose-demo" class="glass rounded-2xl p-6 sm:p-8 overflow-hidden relative">
+            <div class="flex items-center gap-3 mb-8 text-xs text-white/40">
+              <span id="rep-stage-label" class="text-indigo-300 font-medium">Step 1 of 3</span>
+              <span class="w-1 h-1 rounded-full bg-white/20"></span>
+              <span id="rep-stage-desc">Loading source content...</span>
+            </div>
+
+            <div id="rep-stage-1" class="demo-stage">
+              <div class="text-xs text-white/30 mb-3 font-mono">SOURCE</div>
+              <div class="source-block opacity-0 translate-y-3 transition-all duration-500 px-5 py-4 rounded-xl bg-white/5 border border-white/10">
+                <div class="text-sm font-medium text-white/80 mb-1">How I batch 12 videos in one day</div>
+                <div class="text-xs text-white/40">Long-form video · 14:32 · Full transcript ready</div>
+              </div>
+            </div>
+
+            <div id="rep-stage-2" class="demo-stage hidden">
+              <div class="text-xs text-white/30 mb-4 font-mono">AI EXTRACTING HOOKS & ANGLES</div>
+              <div class="space-y-2">
+                <div class="extract-item opacity-0 translate-y-3 transition-all duration-500 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white/60">
+                  Hook: “I used to film one video a week...”
+                </div>
+                <div class="extract-item opacity-0 translate-y-3 transition-all duration-500 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white/60" style="transition-delay:80ms">
+                  Key system: 3-block batching method
+                </div>
+                <div class="extract-item opacity-0 translate-y-3 transition-all duration-500 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white/60" style="transition-delay:160ms">
+                  CTA opportunity: free template
+                </div>
+              </div>
+            </div>
+
+            <div id="rep-stage-3" class="demo-stage hidden">
+              <div class="text-xs text-white/30 mb-4 font-mono">OUTPUTS GENERATED</div>
+              <div class="grid sm:grid-cols-2 gap-3">
+                <div class="output-card opacity-0 translate-y-3 transition-all duration-500 px-4 py-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                  <div class="text-[10px] uppercase tracking-wider text-indigo-300 mb-1">Short-form</div>
+                  <div class="text-sm text-white/80">Reel script · 42s</div>
+                </div>
+                <div class="output-card opacity-0 translate-y-3 transition-all duration-500 px-4 py-3 rounded-xl bg-white/5 border border-white/10" style="transition-delay:80ms">
+                  <div class="text-[10px] uppercase tracking-wider text-white/40 mb-1">Thread</div>
+                  <div class="text-sm text-white/70">X/LinkedIn · 7 posts</div>
+                </div>
+                <div class="output-card opacity-0 translate-y-3 transition-all duration-500 px-4 py-3 rounded-xl bg-white/5 border border-white/10" style="transition-delay:160ms">
+                  <div class="text-[10px] uppercase tracking-wider text-white/40 mb-1">Carousel</div>
+                  <div class="text-sm text-white/70">8 slides · ready to design</div>
+                </div>
+                <div class="output-card opacity-0 translate-y-3 transition-all duration-500 px-4 py-3 rounded-xl bg-white/5 border border-white/10" style="transition-delay:240ms">
+                  <div class="text-[10px] uppercase tracking-wider text-white/40 mb-1">Newsletter</div>
+                  <div class="text-sm text-white/70">Full version + CTA</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hardware -->
+    <section id="hardware" class="py-28">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="mb-16">
+          <p class="text-indigo-300 text-sm font-medium tracking-wide mb-3">Hardware</p>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Custom systems.</h2>
+        </div>
+
+        <div class="glass p-8 sm:p-10 rounded-2xl max-w-2xl">
+          <h3 class="text-xl font-semibold mb-3">Performance builds</h3>
+          <p class="text-white/45 text-sm leading-relaxed mb-6">
+            Custom PCs engineered for creators, developers, and power users. Clean builds, no bloat, focused on real performance.
+          </p>
+          <a href="#contact" class="inline-flex items-center text-sm text-indigo-300 hover:text-indigo-200 transition">
+            Inquire about a build →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-28">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="max-w-xl">
+          <p class="text-indigo-300 text-sm font-medium tracking-wide mb-4">About</p>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-6">Built for people who ship.</h2>
+          <p class="text-white/50 leading-relaxed text-lg">
+            Not another agency. A lab that builds real AI systems, websites, tools, and hardware — helping small teams move faster with actual engineering craft.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-28">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="glass rounded-3xl px-8 py-16 sm:px-16 sm:py-20 text-center relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-b from-indigo-500/10 to-transparent pointer-events-none"></div>
+          <div class="relative">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/60 mb-7">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Accepting new builds
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-5">Ready to ship something real?</h2>
+            <p class="text-white/50 mb-9 max-w-md mx-auto">
+              Website, tool, AI system, creator workflow, or custom PC — tell us what you want to build.
+            </p>
+            <a href="mailto:hello@vsitlabs.com?subject=I%20want%20to%20plan%20a%20build" class="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium cta-glow">
+              hello@vsitlabs.com
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-8">
+      <div class="max-w-5xl mx-auto px-6 flex items-center justify-between text-sm text-white/30">
+        <div class="flex items-center gap-3">
+          <span class="text-white/50 font-medium">VSIT Labs</span>
+          <span class="w-1 h-1 rounded-full bg-indigo-400/70"></span>
+          <span class="text-xs">Systems online</span>
+        </div>
+        <span>© 2026</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Stars
+    const starsEl = document.getElementById('stars');
+    const count = 130;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2.6 + 0.7;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.setProperty('--d', (Math.random() * 3.2 + 2) + 's');
+      s.style.setProperty('--o', (Math.random() * 0.8 + 0.25).toFixed(2));
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      starsEl.appendChild(s);
+    }
+
+    // ===== ADVANCED AI CURSOR DEMO =====
+    (function() {
+      const demo = document.getElementById('planner-demo');
+      if (!demo) return;
+
+      // Create AI cursor
+      const cursor = document.createElement('div');
+      cursor.className = 'ai-cursor';
+      cursor.innerHTML = `
+        <div class="click-ring"></div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M5.5 3.21V20.8c0 .10.10.0.1.35l4.86-4.86 3.21 7.6a.5.5 0 00.92-.1l2.02-6.54 5.47-1.76a.5.5 0 00.1-.93L5.85 2.86a.5.5 0 00-.35.35z" fill="#a5b4fc"/>
+        </svg>
+      `;
+      demo.appendChild(cursor);
+
+      const stage1 = document.getElementById('demo-stage-1');
+      const stage2 = document.getElementById('demo-stage-2');
+      const stage3 = document.getElementById('demo-stage-3');
+      const stageLabel = document.getElementById('stage-label');
+      const stageDesc = document.getElementById('stage-desc');
+
+      let running = false;
+      let timers = [];
+
+      function clearTimers() {
+        timers.forEach(t => clearTimeout(t));
+        timers = [];
+      }
+
+      function moveCursor(x, y, duration = 600) {
+        return new Promise(resolve => {
+          cursor.style.transition = `left ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), top ${duration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+          cursor.style.left = x + 'px';
+          cursor.style.top = y + 'px';
+          timers.push(setTimeout(resolve, duration + 30));
+        });
+      }
+
+      function clickCursor() {
+        return new Promise(resolve => {
+          cursor.classList.add('clicking');
+          timers.push(setTimeout(() => {
+            cursor.classList.remove('clicking');
+            resolve();
+          }, 280));
+        });
+      }
+
+      function showCursor() {
+        cursor.classList.add('visible');
+      }
+      function hideCursor() {
+        cursor.classList.remove('visible');
+      }
+
+      function setStageText(step, desc) {
+        stageLabel.innerHTML = step;
+        stageDesc.innerHTML = desc;
+      }
+
+      async function fadeToStage(showEl, hideEls) {
+        hideEls.forEach(el => {
+          el.classList.add('fade-out');
+        });
+        await new Promise(r => timers.push(setTimeout(r, 400)));
+        hideEls.forEach(el => {
+          el.classList.add('hidden');
+          el.classList.remove('fade-out');
+        });
+        showEl.classList.remove('hidden');
+        showEl.style.opacity = '0';
+        showEl.style.transform = 'translateY(16px)';
+        requestAnimationFrame(() => {
+          showEl.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          showEl.style.opacity = '1';
+          showEl.style.transform = 'translateY(0)';
+        });
+        await new Promise(r => timers.push(setTimeout(r, 500)));
+      }
+
+      function revealItems(container, selector, stagger = 140) {
+        const items = container.querySelectorAll(selector);
+        items.forEach((el, i) => {
+          timers.push(setTimeout(() => {
+            el.classList.add('visible');
+            if (el.classList.contains('ranked-item')) {
+              el.classList.add('rank-flash');
+              setTimeout(() => el.classList.remove('rank-flash'), 600);
+            }
+          }, i * stagger));
+        });
+      }
+
+      async function runSequence() {
+        if (running) return;
+        running = true;
+        clearTimers();
+
+        // Reset everything
+        [stage1, stage2, stage3].forEach(s => {
+          s.classList.add('hidden');
+          s.classList.remove('fade-out');
+          s.querySelectorAll('.idea-chip, .ranked-item, .outline-block, .calendar-block').forEach(el => {
+            el.classList.remove('visible', 'rank-flash');
+          });
+        });
+
+        const rect = demo.getBoundingClientRect();
+        // Start cursor off to the side
+        cursor.style.left = '40px';
+        cursor.style.top = '80px';
+        showCursor();
+
+        // ===== STAGE 1: Ideas appear =====
+        stage1.classList.remove('hidden');
+        setStageText('Step 1 of 3', 'AI is collecting your raw ideas...');
+        await new Promise(r => timers.push(setTimeout(r, 400)));
+
+        const chips = stage1.querySelectorAll('.idea-chip');
+        for (let i = 0; i < chips.length; i++) {
+          const chip = chips[i];
+          const chipRect = chip.getBoundingClientRect();
+          const demoRect = demo.getBoundingClientRect();
+          const x = chipRect.left - demoRect.left + chipRect.width * 0.7;
+          const y = chipRect.top - demoRect.top + 10;
+
+          await moveCursor(x, y, 480);
+          await clickCursor();
+          chip.classList.add('visible');
+          await new Promise(r => timers.push(setTimeout(r, 220)));
+        }
+
+        setStageText('Step 1 of 3', '<span class="ai-thinking"><span></span><span></span><span></span></span> AI is thinking...');
+        await new Promise(r => timers.push(setTimeout(r, 1400)));
+
+        // ===== STAGE 2: Ranking =====
+        await fadeToStage(stage2, [stage1]);
+        setStageText('Step 2 of 3', 'Ranking ideas by leverage & potential...');
+
+        // Cursor moves to first ranked item
+        await new Promise(r => timers.push(setTimeout(r, 200)));
+        const ranked = stage2.querySelectorAll('.ranked-item');
+        for (let i = 0; i < ranked.length; i++) {
+          const item = ranked[i];
+          const itemRect = item.getBoundingClientRect();
+          const demoRect = demo.getBoundingClientRect();
+          const x = itemRect.left - demoRect.left + 30;
+          const y = itemRect.top - demoRect.top + 14;
+
+          await moveCursor(x, y, 420);
+          await clickCursor();
+          item.classList.add('visible', 'rank-flash');
+          await new Promise(r => timers.push(setTimeout(r, 280)));
+        }
+
+        setStageText('Step 2 of 3', 'Top idea selected');
+        await new Promise(r => timers.push(setTimeout(r, 900)));
+
+        // ===== STAGE 3: Outline + Calendar =====
+        await fadeToStage(stage3, [stage2]);
+        setStageText('Step 3 of 3', 'Generating outline + calendar...');
+
+        const outline = stage3.querySelector('.outline-block');
+        const calendar = stage3.querySelector('.calendar-block');
+
+        // Cursor to outline
+        const outRect = outline.getBoundingClientRect();
+        const demoRect2 = demo.getBoundingClientRect();
+        await moveCursor(outRect.left - demoRect2.left + 40, outRect.top - demoRect2.top + 20, 500);
+        await clickCursor();
+        outline.classList.add('visible');
+
+        await new Promise(r => timers.push(setTimeout(r, 500)));
+
+        // Cursor to calendar
+        const calRect = calendar.getBoundingClientRect();
+        await moveCursor(calRect.left - demoRect2.left + 40, calRect.top - demoRect2.top + 20, 480);
+        await clickCursor();
+        calendar.classList.add('visible');
+
+        setStageText('Step 3 of 3', 'Plan ready · Ready to ship');
+        await new Promise(r => timers.push(setTimeout(r, 1800)));
+
+        // Soft hide cursor
+        hideCursor();
+        running = false;
+      }
+
+      // Trigger on scroll into view
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !running) {
+            runSequence();
+          }
+        });
+      }, { threshold: 0.4 });
+
+      observer.observe(demo);
+
+      // Replay on click
+      demo.style.cursor = 'pointer';
+      demo.addEventListener('click', () => {
+        if (!running) runSequence();
+      });
+    })();
+
+    // ===== ONE-TO-MANY REPURPOSING DEMO =====
+    (function() {
+      const demo = document.getElementById('repurpose-demo');
+      if (!demo) return;
+
+      const cursor = document.createElement('div');
+      cursor.className = 'ai-cursor';
+      cursor.innerHTML = `
+        <div class="click-ring"></div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M5.5 3.21V20.8c0 .10.10.0.1.35l4.86-4.86 3.21 7.6a.5.5 0 00.92-.1l2.02-6.54 5.47-1.76a.5.5 0 00.1-.93L5.85 2.86a.5.5 0 00-.35.35z" fill="#a5b4fc"/>
+        </svg>
+      `;
+      demo.appendChild(cursor);
+
+      const stage1 = document.getElementById('rep-stage-1');
+      const stage2 = document.getElementById('rep-stage-2');
+      const stage3 = document.getElementById('rep-stage-3');
+      const stageLabel = document.getElementById('rep-stage-label');
+      const stageDesc = document.getElementById('rep-stage-desc');
+
+      let running = false;
+      let timers = [];
+
+      function clearTimers() {
+        timers.forEach(t => clearTimeout(t));
+        timers = [];
+      }
+
+      function moveCursor(x, y, duration = 550) {
+        return new Promise(resolve => {
+          cursor.style.transition = `left ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), top ${duration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+          cursor.style.left = x + 'px';
+          cursor.style.top = y + 'px';
+          timers.push(setTimeout(resolve, duration + 20));
+        });
+      }
+
+      function clickCursor() {
+        return new Promise(resolve => {
+          cursor.classList.add('clicking');
+          timers.push(setTimeout(() => {
+            cursor.classList.remove('clicking');
+            resolve();
+          }, 260));
+        });
+      }
+
+      function showCursor() { cursor.classList.add('visible'); }
+      function hideCursor() { cursor.classList.remove('visible'); }
+
+      function setText(step, desc) {
+        stageLabel.innerHTML = step;
+        stageDesc.innerHTML = desc;
+      }
+
+      async function fadeTo(showEl, hideEls) {
+        hideEls.forEach(el => el.classList.add('fade-out'));
+        await new Promise(r => timers.push(setTimeout(r, 380)));
+        hideEls.forEach(el => {
+          el.classList.add('hidden');
+          el.classList.remove('fade-out');
+        });
+        showEl.classList.remove('hidden');
+        showEl.style.opacity = '0';
+        showEl.style.transform = 'translateY(14px)';
+        requestAnimationFrame(() => {
+          showEl.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+          showEl.style.opacity = '1';
+          showEl.style.transform = 'translateY(0)';
+        });
+        await new Promise(r => timers.push(setTimeout(r, 450)));
+      }
+
+      async function run() {
+        if (running) return;
+        running = true;
+        clearTimers();
+
+        [stage1, stage2, stage3].forEach(s => {
+          s.classList.add('hidden');
+          s.classList.remove('fade-out');
+          s.querySelectorAll('.source-block, .extract-item, .output-card').forEach(el => {
+            el.classList.remove('visible');
+          });
+        });
+
+        cursor.style.left = '50px';
+        cursor.style.top = '90px';
+        showCursor();
+
+        // Stage 1 – Source
+        stage1.classList.remove('hidden');
+        setText('Step 1 of 3', 'Loading source content...');
+        await new Promise(r => timers.push(setTimeout(r, 350)));
+
+        const source = stage1.querySelector('.source-block');
+        const sRect = source.getBoundingClientRect();
+        const dRect = demo.getBoundingClientRect();
+        await moveCursor(sRect.left - dRect.left + 60, sRect.top - dRect.top + 18, 500);
+        await clickCursor();
+        source.classList.add('visible');
+
+        setText('Step 1 of 3', '<span class="ai-thinking"><span></span><span></span><span></span></span> Reading full transcript...');
+        await new Promise(r => timers.push(setTimeout(r, 1600)));
+
+        // Stage 2 – Extracting
+        await fadeTo(stage2, [stage1]);
+        setText('Step 2 of 3', 'Extracting hooks & angles...');
+
+        const extracts = stage2.querySelectorAll('.extract-item');
+        for (let i = 0; i < extracts.length; i++) {
+          const item = extracts[i];
+          const iRect = item.getBoundingClientRect();
+          const dRect2 = demo.getBoundingClientRect();
+          await moveCursor(iRect.left - dRect2.left + 40, iRect.top - dRect2.top + 12, 420);
+          await clickCursor();
+          item.classList.add('visible');
+          await new Promise(r => timers.push(setTimeout(r, 200)));
+        }
+
+        setText('Step 2 of 3', 'Key angles locked');
+        await new Promise(r => timers.push(setTimeout(r, 900)));
+
+        // Stage 3 – Outputs
+        await fadeTo(stage3, [stage2]);
+        setText('Step 3 of 3', 'Generating multi-platform outputs...');
+
+        const cards = stage3.querySelectorAll('.output-card');
+        for (let i = 0; i < cards.length; i++) {
+          const card = cards[i];
+          const cRect = card.getBoundingClientRect();
+          const dRect3 = demo.getBoundingClientRect();
+          await moveCursor(cRect.left - dRect3.left + 50, cRect.top - dRect3.top + 16, 400);
+          await clickCursor();
+          card.classList.add('visible');
+          await new Promise(r => timers.push(setTimeout(r, 180)));
+        }
+
+        setText('Step 3 of 3', '4 formats ready · Publish anywhere');
+        await new Promise(r => timers.push(setTimeout(r, 1800)));
+
+        hideCursor();
+        running = false;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !running) run();
+        });
+      }, { threshold: 0.4 });
+
+      observer.observe(demo);
+
+      demo.style.cursor = 'pointer';
+      demo.addEventListener('click', () => {
+        if (!running) run();
+      });
+    })();
+  </script>
+</body>
+</html>
