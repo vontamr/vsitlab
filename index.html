@@ -1,420 +1,609 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VSIT Labs</title>
-  <meta name="description" content="VSIT Labs — production websites, AI systems, and custom PCs. Pay to start. Work begins after payment." />
-  <meta name="theme-color" content="#07070c" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #07070c;
-      --surface: #12121a;
-      --elevated: #1a1a24;
-      --fg: #f4f4f7;
-      --muted: #9b9ba8;
-      --subtle: #6e6e7c;
-      --primary: #c8ccd8;
-      --primary-fg: #07070c;
-      --accent: #7b83ff;
-      --cyan: #5eead4;
-      --line: #ffffff14;
-      --line-strong: #ffffff28;
-      --ok: #34d399;
-      --danger: #fb7185;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body {
-      margin: 0;
-      font-family: "IBM Plex Sans", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
-      min-height: 100dvh;
-    }
-    h1, h2, h3 { font-family: Syne, sans-serif; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
-    p { text-wrap: pretty; }
-    a { color: inherit; }
-    button, .btn { font-family: inherit; cursor: pointer; }
-    img { max-width: 100%; display: block; }
-    .bg {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        linear-gradient(to bottom, rgba(7,7,12,.3), rgba(7,7,12,.7) 50%, #07070c),
-        radial-gradient(ellipse 90% 55% at 50% 0%, rgba(123,131,255,.18), transparent 55%),
-        url("assets/image-1.jpg") center / cover;
-      opacity: .9;
-    }
-    header {
-      position: fixed; inset: 0 0 auto; z-index: 40;
-      border-bottom: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg) 70%, transparent);
-      backdrop-filter: blur(20px);
-    }
-    .wrap { width: min(1024px, calc(100% - 48px)); margin-inline: auto; }
-    .nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
-    .logo-img {
-      height: 44px; width: auto; max-width: min(220px, 46vw); object-fit: contain;
-      filter: drop-shadow(0 0 8px color-mix(in oklab, var(--cyan) 60%, transparent))
-              drop-shadow(0 0 18px color-mix(in oklab, var(--cyan) 32%, transparent));
-      animation: glow 3s ease-in-out infinite;
-    }
-    @media (min-width: 640px) { .logo-img { height: 56px; max-width: 260px; } }
-    @keyframes glow {
-      0%,100% { filter: drop-shadow(0 0 6px color-mix(in oklab, var(--cyan) 45%, transparent)) drop-shadow(0 0 14px color-mix(in oklab, var(--cyan) 22%, transparent)); }
-      50% { filter: drop-shadow(0 0 12px color-mix(in oklab, var(--cyan) 80%, transparent)) drop-shadow(0 0 26px color-mix(in oklab, var(--cyan) 40%, transparent)); }
-    }
-    nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px 18px; }
-    nav a {
-      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none;
-      color: var(--muted);
-    }
-    nav a:hover { color: var(--fg); }
-    main { position: relative; z-index: 10; padding-top: 88px; }
-    .hero { display: grid; gap: 48px; min-height: calc(100dvh - 88px); align-items: center; padding: 32px 0 64px; }
-    @media (min-width: 960px) { .hero { grid-template-columns: 1.15fr .85fr; } }
-    .pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid var(--line); background: color-mix(in oklab, var(--surface) 80%, transparent);
-      border-radius: 999px; padding: 6px 14px; font-size: 12px; color: var(--muted);
-    }
-    .dot { width: 6px; height: 6px; border-radius: 99px; background: var(--ok); }
-    h1 { font-size: clamp(2.2rem, 5vw, 3.75rem); line-height: 1.05; }
-    .muted { color: var(--muted); }
-    .subtle { color: var(--subtle); }
-    .lead { margin-top: 24px; max-width: 36rem; font-size: 1.125rem; line-height: 1.6; color: var(--muted); }
-    .row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      height: 48px; padding: 0 24px; border-radius: 14px; text-decoration: none; font-weight: 500; font-size: 15px;
-      border: 1px solid transparent; transition: .15s ease;
-    }
-    .btn-primary { background: var(--primary); color: var(--primary-fg); }
-    .btn-accent { background: var(--accent); color: #fff; box-shadow: 0 0 24px color-mix(in oklab, var(--accent) 35%, transparent); }
-    .btn-ghost { background: transparent; color: var(--fg); border-color: var(--line-strong); }
-    .btn:hover { opacity: .92; }
-    .btn-sm { height: 40px; padding: 0 16px; font-size: 13px; border-radius: 10px; }
-    .card {
-      border: 1px solid var(--line); background: color-mix(in oklab, var(--surface) 92%, transparent);
-      border-radius: 12px; padding: 22px;
-    }
-    .aside { display: none; }
-    @media (min-width: 960px) { .aside { display: block; } }
-    .kicker { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--subtle); }
-    .price { font-family: Syne, sans-serif; font-size: 1.25rem; }
-    section { padding: 96px 0; }
-    .section-kicker { font-size: 14px; font-weight: 500; letter-spacing: .04em; color: var(--accent); margin: 0 0 12px; }
-    .grid-4 { display: grid; gap: 16px; }
-    .grid-3 { display: grid; gap: 20px; }
-    .grid-2 { display: grid; gap: 16px; }
-    @media (min-width: 640px) {
-      .grid-4 { grid-template-columns: 1fr 1fr; }
-      .grid-3 { grid-template-columns: 1fr 1fr; }
-      .grid-2 { grid-template-columns: 1fr 1fr; }
-    }
-    @media (min-width: 960px) {
-      .grid-4 { grid-template-columns: repeat(4, 1fr); }
-      .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    }
-    .product h3 { font-size: 1.15rem; margin: 8px 0 4px; }
-    .product .blurb { font-size: 14px; line-height: 1.55; color: var(--muted); min-height: 3.2em; }
-    .product ul { margin: 14px 0 18px; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
-    .product li { display: flex; gap: 8px; margin: 6px 0; }
-    .product li::before { content: ""; width: 4px; height: 4px; margin-top: 8px; border-radius: 99px; background: var(--accent); flex: none; }
-    .badge {
-      font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-      border: 1px solid color-mix(in oklab, var(--ok) 30%, transparent);
-      color: var(--ok); background: color-mix(in oklab, var(--ok) 12%, transparent);
-      border-radius: 999px; padding: 3px 8px;
-    }
-    .pc-img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 14px; border: 1px solid var(--line); }
-    textarea, input[type="email"], input[type="text"], input[type="tel"] {
-      width: 100%; background: var(--elevated); border: 1px solid var(--line); color: var(--fg);
-      border-radius: 12px; padding: 12px 16px; font: inherit; font-size: 14px;
-    }
-    textarea:focus, input:focus { outline: 2px solid color-mix(in oklab, var(--accent) 40%, transparent); border-color: color-mix(in oklab, var(--accent) 60%, transparent); }
-    footer {
-      position: relative; z-index: 10; border-top: 1px solid var(--line);
-      padding: 32px 0; color: var(--subtle); font-size: 14px;
-    }
-    .foot { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
-    .sticky {
-      position: fixed; inset: auto 0 0; z-index: 30; padding: 12px;
-      border-top: 1px solid var(--line); background: color-mix(in oklab, var(--bg) 85%, transparent);
-      backdrop-filter: blur(16px);
-    }
-    .sticky .btn { width: 100%; }
-    @media (min-width: 640px) { .sticky { display: none; } }
-    .cta-band {
-      text-align: center; padding: 64px 32px; border-radius: 20px; border: 1px solid var(--line);
-      background: linear-gradient(to bottom, color-mix(in oklab, var(--accent) 10%, var(--surface)), var(--surface));
-    }
-    .ranked { display: flex; justify-content: space-between; gap: 12px; border: 1px solid var(--line); background: var(--elevated); border-radius: 10px; padding: 12px 16px; margin-top: 8px; }
-    .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--accent); }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VSIT Labs — Custom Sites, Apps & AI</title>
+<meta name="description" content="VSIT Labs builds custom websites, apps, and AI systems for any business. Team of experts including an AI engineer. 24/7 support available." />
+<meta name="theme-color" content="#07070c" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root {
+--bg: #07070c;
+--surface: #12121a;
+--elevated: #1a1a24;
+--fg: #f4f4f7;
+--muted: #9b9ba8;
+--subtle: #6e6e7c;
+--primary: #c8ccd8;
+--primary-fg: #07070c;
+--accent: #7b83ff;
+--cyan: #5eead4;
+--line: #ffffff14;
+--line-strong: #ffffff28;
+--ok: #34d399;
+--danger: #fb7185;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+margin: 0;
+font-family: "IBM Plex Sans", system-ui, sans-serif;
+background: var(--bg);
+color: var(--fg);
+min-height: 100dvh;
+}
+h1, h2, h3 { font-family: Syne, sans-serif; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+p { text-wrap: pretty; }
+a { color: inherit; }
+button, .btn { font-family: inherit; cursor: pointer; }
+img { max-width: 100%; display: block; }
+.bg {
+position: fixed; inset: 0; z-index: 0; pointer-events: none;
+background:
+linear-gradient(to bottom, rgba(7,7,12,.3), rgba(7,7,12,.7) 50%, #07070c),
+radial-gradient(ellipse 90% 55% at 50% 0%, rgba(123,131,255,.18), transparent 55%),
+url("assets/image-1.jpg") center / cover;
+opacity: .9;
+}
+header {
+position: fixed; inset: 0 0 auto; z-index: 40;
+border-bottom: 1px solid var(--line);
+background: color-mix(in oklab, var(--bg) 70%, transparent);
+backdrop-filter: blur(20px);
+}
+.wrap { width: min(1024px, calc(100% - 48px)); margin-inline: auto; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.logo-img {
+height: 44px; width: auto; max-width: min(220px, 46vw); object-fit: contain;
+filter: drop-shadow(0 0 8px color-mix(in oklab, var(--cyan) 60%, transparent))
+drop-shadow(0 0 18px color-mix(in oklab, var(--cyan) 32%, transparent));
+animation: glow 3s ease-in-out infinite;
+}
+@media (min-width: 640px) { .logo-img { height: 56px; max-width: 260px; } }
+@keyframes glow {
+  0%,100% { filter: drop-shadow(0 0 6px color-mix(in oklab, var(--cyan) 45%, transparent)) drop-shadow(0 0 14px color-mix(in oklab, var(--cyan) 22%, transparent)); }
+  50% { filter: drop-shadow(0 0 12px color-mix(in oklab, var(--cyan) 80%, transparent)) drop-shadow(0 0 26px color-mix(in oklab, var(--cyan) 40%, transparent)); }
+}
+nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px 18px; }
+nav a {
+font-size: 10px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none;
+color: var(--muted); transition: color .15s ease;
+}
+nav a:hover { color: var(--fg); }
+main { position: relative; z-index: 10; padding-top: 88px; }
+.hero { display: grid; gap: 48px; min-height: calc(100dvh - 88px); align-items: center; padding: 32px 0 64px; }
+@media (min-width: 960px) { .hero { grid-template-columns: 1.15fr .85fr; } }
+.pill {
+display: inline-flex; align-items: center; gap: 8px;
+border: 1px solid var(--line); background: color-mix(in oklab, var(--surface) 80%, transparent);
+border-radius: 999px; padding: 6px 14px; font-size: 12px; color: var(--muted);
+}
+.dot { width: 6px; height: 6px; border-radius: 99px; background: var(--ok); box-shadow: 0 0 8px color-mix(in oklab, var(--ok) 50%, transparent); }
+h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); line-height: 1.02; font-weight: 700; }
+.muted { color: var(--muted); }
+.subtle { color: var(--subtle); }
+.lead { margin-top: 24px; max-width: 36rem; font-size: 1.125rem; line-height: 1.65; color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+.btn {
+display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+height: 48px; padding: 0 24px; border-radius: 14px; text-decoration: none; font-weight: 500; font-size: 15px;
+border: 1px solid transparent; transition: .15s ease;
+}
+.btn-primary { background: var(--primary); color: var(--primary-fg); }
+.btn-accent { background: var(--accent); color: #fff; box-shadow: 0 0 24px color-mix(in oklab, var(--accent) 35%, transparent); }
+.btn-ghost { background: transparent; color: var(--fg); border-color: var(--line-strong); }
+.btn:hover { opacity: .92; transform: translateY(-1px); }
+.btn-sm { height: 40px; padding: 0 16px; font-size: 13px; border-radius: 10px; }
+.card {
+border: 1px solid var(--line); background: color-mix(in oklab, var(--surface) 92%, transparent);
+border-radius: 14px; padding: 22px; transition: border-color .15s ease, background .15s ease;
+}
+.card:hover { border-color: var(--line-strong); }
+.aside { display: none; }
+@media (min-width: 960px) { .aside { display: block; } }
+.kicker { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--subtle); }
+section { padding: 96px 0; }
+.section-kicker { font-size: 13px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+.grid-4 { display: grid; gap: 16px; }
+.grid-3 { display: grid; gap: 20px; }
+.grid-2 { display: grid; gap: 16px; }
+@media (min-width: 640px) {
+.grid-4 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: 1fr 1fr; }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 960px) {
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+.product h3 { font-size: 1.15rem; margin: 8px 0 4px; }
+.product .blurb { font-size: 14px; line-height: 1.55; color: var(--muted); min-height: 3.2em; }
+.product ul { margin: 14px 0 18px; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+.product li { display: flex; gap: 8px; margin: 6px 0; }
+.product li::before { content: ""; width: 4px; height: 4px; margin-top: 8px; border-radius: 99px; background: var(--accent); flex: none; }
+.badge {
+font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+border: 1px solid color-mix(in oklab, var(--ok) 30%, transparent);
+color: var(--ok); background: color-mix(in oklab, var(--ok) 12%, transparent);
+border-radius: 999px; padding: 3px 8px;
+}
+.pc-img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; margin-bottom: 14px; border: 1px solid var(--line); }
+textarea, input[type="email"], input[type="text"], input[type="tel"] {
+width: 100%; background: var(--elevated); border: 1px solid var(--line); color: var(--fg);
+border-radius: 12px; padding: 12px 16px; font: inherit; font-size: 14px;
+}
+textarea:focus, input:focus { outline: 2px solid color-mix(in oklab, var(--accent) 40%, transparent); border-color: color-mix(in oklab, var(--accent) 60%, transparent); }
+footer {
+position: relative; z-index: 10; border-top: 1px solid var(--line);
+padding: 32px 0; color: var(--subtle); font-size: 14px;
+}
+.foot { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+.sticky {
+position: fixed; inset: auto 0 0; z-index: 30; padding: 12px;
+border-top: 1px solid var(--line); background: color-mix(in oklab, var(--bg) 85%, transparent);
+backdrop-filter: blur(16px);
+}
+.sticky .btn { width: 100%; }
+@media (min-width: 640px) { .sticky { display: none; } }
+.cta-band {
+text-align: center; padding: 64px 32px; border-radius: 20px; border: 1px solid var(--line);
+background: linear-gradient(to bottom, color-mix(in oklab, var(--accent) 10%, var(--surface)), var(--surface));
+}
+.ranked { display: flex; justify-content: space-between; gap: 12px; border: 1px solid var(--line); background: var(--elevated); border-radius: 10px; padding: 12px 16px; margin-top: 8px; }
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; color: var(--accent); }
+.ownership-card {
+border: 1px solid var(--line);
+background: color-mix(in oklab, var(--surface) 92%, transparent);
+border-radius: 16px;
+padding: 28px 24px;
+height: 100%;
+}
+.ownership-card h3 { font-size: 1.2rem; margin-top: 12px; }
+.ownership-card .blurb { margin-top: 10px; font-size: 14px; line-height: 1.6; color: var(--muted); }
+.ownership-card ul { margin: 18px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--muted); }
+.ownership-card li { display: flex; gap: 10px; margin: 8px 0; }
+.ownership-card li::before { content: ""; width: 5px; height: 5px; margin-top: 8px; border-radius: 99px; background: var(--cyan); flex: none; }
+.step-num {
+font-family: "IBM Plex Mono", ui-monospace, monospace;
+font-size: 13px;
+color: var(--accent);
+letter-spacing: 0.04em;
+}
+.popular-ring {
+box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent),
+0 0 28px color-mix(in oklab, var(--accent) 18%, transparent);
+}
+.work-grid {
+display: grid;
+gap: 20px;
+margin-top: 40px;
+}
+@media (min-width: 640px) {
+.work-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 960px) {
+.work-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.work-card {
+border: 1px solid var(--line);
+background: color-mix(in oklab, var(--surface) 92%, transparent);
+border-radius: 16px;
+overflow: hidden;
+transition: border-color .2s ease, transform .2s ease;
+display: flex;
+flex-direction: column;
+}
+.work-card:hover {
+border-color: var(--line-strong);
+transform: translateY(-3px);
+}
+.work-thumb {
+width: 100%;
+aspect-ratio: 16 / 10;
+object-fit: cover;
+background: var(--elevated);
+border-bottom: 1px solid var(--line);
+}
+.work-body {
+padding: 18px 18px 20px;
+display: flex;
+flex-direction: column;
+flex: 1;
+gap: 8px;
+}
+.work-meta {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 8px;
+}
+.work-tag {
+font-size: 10px;
+letter-spacing: .12em;
+text-transform: uppercase;
+color: var(--accent);
+font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+.work-card h3 { font-size: 1.1rem; margin: 0; }
+.work-card .blurb {
+font-size: 13px;
+line-height: 1.55;
+color: var(--muted);
+flex: 1;
+}
+.work-link {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+font-size: 13px;
+font-weight: 500;
+color: var(--fg);
+text-decoration: none;
+margin-top: 10px;
+}
+.work-link:hover { color: var(--cyan); }
+.work-placeholder {
+width: 100%;
+aspect-ratio: 16 / 10;
+background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 12%, var(--elevated)), var(--elevated));
+border-bottom: 1px solid var(--line);
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(--subtle);
+font-size: 12px;
+letter-spacing: .08em;
+text-transform: uppercase;
+font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+</style>
 </head>
 <body>
-  <div class="bg" aria-hidden="true"></div>
-  <header>
-    <div class="wrap nav">
-      <a href="#top" aria-label="VSIT Labs"><img src="assets/vsitlabslogo2.png" alt="VSIT Labs" class="logo-img" /></a>
-      <nav>
-        <a href="#services">Services</a>
-        <a href="#creators">Creators</a>
-        <a href="#hardware">Hardware</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
+<div class="bg" aria-hidden="true"></div>
+<header>
+<div class="wrap nav">
+<a href="#top" aria-label="VSIT Labs"><img src="assets/vsitlabslogo2.png" alt="VSIT Labs" class="logo-img" /></a>
+<nav>
+<a href="#work">Work</a>
+<a href="#services">Services</a>
+<a href="#ownership">Ownership</a>
+<a href="#creators">Creators</a>
+<a href="#hardware">Hardware</a>
+<a href="#contact">Contact</a>
+</nav>
+</div>
+</header>
 
-  <main id="top">
-    <section class="wrap hero">
-      <div>
-        <div class="pill"><span class="dot"></span> Checkout live · work starts after payment</div>
-        <h1 style="margin-top:32px">Pay to start.<br /><span class="muted">We ship.</span></h1>
-        <p class="lead">Production sites, AI systems, and custom PCs. Fixed prices. Stripe checkout is live — no unpaid builds, no waiting on invoices.</p>
-        <div class="row">
-          <a class="btn btn-primary" href="https://buy.stripe.com/3cI8wQ03F2X6adE5iR0ZW09">Start a site — $500 deposit</a>
-          <a class="btn btn-ghost" href="#hardware">Shop custom PCs</a>
-        </div>
-        <p class="subtle" style="margin-top:20px;font-size:12px">Secure Stripe checkout · Apple Pay &amp; Google Pay</p>
-      </div>
-      <aside class="card aside">
-        <p class="kicker">Start here</p>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:8px">
-          <h2 style="font-size:1.25rem">Project Deposit</h2>
-          <p class="price">$500</p>
-        </div>
-        <p class="muted" style="margin:8px 0 0;font-size:14px;line-height:1.55">Locks your slot. Applied in full to the project total.</p>
-        <ul style="margin:16px 0;padding:0;list-style:none;font-size:14px;color:var(--muted)">
-          <li style="display:flex;gap:8px;margin:6px 0"><span style="width:4px;height:4px;margin-top:8px;border-radius:99px;background:var(--accent);flex:none"></span>Kickoff within one business day</li>
-          <li style="display:flex;gap:8px;margin:6px 0"><span style="width:4px;height:4px;margin-top:8px;border-radius:99px;background:var(--accent);flex:none"></span>Applied 1:1 to your invoice</li>
-        </ul>
-        <a class="btn btn-primary" style="width:100%" href="https://buy.stripe.com/3cI8wQ03F2X6adE5iR0ZW09">Pay $500 deposit</a>
-        <p class="subtle" style="margin:12px 0 0;font-size:12px">Or <a href="#hardware" style="color:var(--accent)">order a PC from $1,199</a>.</p>
-      </aside>
-    </section>
+<main id="top">
+<section class="wrap hero">
+<div>
+<div class="pill"><span class="dot"></span> Custom builds for any business</div>
+<h1 style="margin-top:32px">Custom sites, apps,<br /><span class="muted">and AI systems.</span></h1>
+<p class="lead">We build custom websites, business apps, and AI tools for any business. Team of experts, including an AI engineer. You get the files, or we manage it with 24/7 support.</p>
+<div class="row">
+<a class="btn btn-primary" href="#services">What we build</a>
+<a class="btn btn-ghost" href="#work">See work</a>
+</div>
+<p class="subtle" style="margin-top:20px;font-size:12px">Websites · Apps · AI · Marketing · 24/7 support</p>
+</div>
+<aside class="card aside">
+<p class="kicker">What we build</p>
+<h2 style="font-size:1.25rem; margin-top:8px">For any business</h2>
+<p class="muted" style="margin:8px 0 0;font-size:14px;line-height:1.55">Custom websites, apps, AI features, and marketing systems. Built by our team.</p>
+<ul style="margin:16px 0;padding:0;list-style:none;font-size:14px;color:var(--muted)">
+<li style="display:flex;gap:8px;margin:6px 0"><span style="width:4px;height:4px;margin-top:8px;border-radius:99px;background:var(--accent);flex:none"></span>Custom websites</li>
+<li style="display:flex;gap:8px;margin:6px 0"><span style="width:4px;height:4px;margin-top:8px;border-radius:99px;background:var(--accent);flex:none"></span>Business apps</li>
+<li style="display:flex;gap:8px;margin:6px 0"><span style="width:4px;height:4px;margin-top:8px;border-radius:99px;background:var(--accent);flex:none"></span>AI systems</li>
+<li style="display:flex;gap:8px;margin:6px 0"><span style="width:4px;height:4px;margin-top:8px;border-radius:99px;background:var(--accent);flex:none"></span>Marketing tools</li>
+</ul>
+<a class="btn btn-primary" style="width:100%" href="#contact">Talk to us</a>
+</aside>
+</section>
 
-    <section id="services">
-      <div class="wrap">
-        <p class="section-kicker">Services</p>
-        <h2 style="font-size:clamp(1.8rem,3vw,2.4rem)">Websites, AI, integrations.</h2>
-        <p class="muted" style="margin-top:16px;max-width:36rem;font-size:14px;line-height:1.6">Fixed packages. Pay to start. Work begins after payment — no unpaid builds.</p>
-        <div class="grid-4" style="margin-top:40px">
-          <article class="card product">
-            <p class="kicker">Start here</p>
-            <h3>Project Deposit</h3>
-            <p class="price">$500</p>
-            <p class="blurb">Locks your slot. Applied in full to the project total. Work starts after this payment clears.</p>
-            <ul>
-              <li>Kickoff within one business day</li>
-              <li>Applied 1:1 to your invoice</li>
-              <li>Scope call + written plan</li>
-              <li>Balance due before launch</li>
-            </ul>
-            <a class="btn btn-primary btn-sm" style="width:100%" href="https://buy.stripe.com/3cI8wQ03F2X6adE5iR0ZW09">Pay deposit</a>
-          </article>
-          <article class="card product">
-            <p class="kicker">Package</p>
-            <h3>Landing Page</h3>
-            <p class="price">$997</p>
-            <p class="blurb">One sharp page that sells. Mobile-ready, with a form and basic SEO — live in about a week.</p>
-            <ul>
-              <li>1 production page</li>
-              <li>Mobile layout + form</li>
-              <li>Basic SEO + analytics hookup</li>
-              <li>Live in 7–10 days</li>
-            </ul>
-            <a class="btn btn-primary btn-sm" style="width:100%" href="https://buy.stripe.com/fZufZi4jVdBK2LcbHf0ZW0c">Buy Landing Page</a>
-          </article>
-          <article class="card product">
-            <p class="kicker">Package · popular</p>
-            <h3>Business Site</h3>
-            <p class="price">$2,497</p>
-            <p class="blurb">A full site for a real business: up to five pages, forms, and a clean launch.</p>
-            <ul>
-              <li>Up to 5 pages</li>
-              <li>Forms + launch checklist</li>
-              <li>On-brand layout system</li>
-              <li>2–3 week delivery</li>
-            </ul>
-            <a class="btn btn-accent btn-sm" style="width:100%" href="https://buy.stripe.com/4gM5kEcQreFOetUbHf0ZW0b">Buy Business Site</a>
-          </article>
-          <article class="card product">
-            <p class="kicker">Package</p>
-            <h3>AI + Integrations</h3>
-            <p class="price">$4,997</p>
-            <p class="blurb">Business site plus one AI feature and up to two integrations — agents, copilots, or workflow glue.</p>
-            <ul>
-              <li>Full business site</li>
-              <li>1 production AI feature</li>
-              <li>Up to 2 integrations</li>
-              <li>Handoff + 14-day support</li>
-            </ul>
-            <a class="btn btn-primary btn-sm" style="width:100%" href="https://buy.stripe.com/bJe9AUbMn41abhI4eN0ZW0a">Buy AI Site</a>
-          </article>
-        </div>
-        <p class="subtle" style="margin-top:32px;font-size:12px">Custom work starts with the $500 deposit. Balance due before launch.</p>
-      </div>
-    </section>
+<section id="work">
+<div class="wrap">
+<p class="section-kicker">Work</p>
+<h2 style="font-size:clamp(1.9rem,3.2vw,2.6rem)">Custom builds.</h2>
+<p class="muted" style="margin-top:16px;max-width:40rem;font-size:15px;line-height:1.65">No templates. Each project is a custom site, app, or system built for a specific business.</p>
 
-    <section id="hardware">
-      <div class="wrap">
-        <p class="section-kicker">Hardware</p>
-        <h2 style="font-size:clamp(1.8rem,3vw,2.4rem)">Custom systems.</h2>
-        <p class="muted" style="margin-top:16px;max-width:36rem;font-size:14px;line-height:1.6">Built for creators and power users. Clean install, no bloat, focused on real performance.</p>
-        <div class="grid-3" style="margin-top:40px">
-          <article class="card product">
-            <img class="pc-img" src="assets/creater.jpg" alt="Creator PC" />
-            <p class="kicker">PC Build</p>
-            <h3>Creator · $1,199</h3>
-            <p class="blurb">Ryzen mid-range + RTX. 32GB RAM and fast NVMe — built for 1440p editing and streaming.</p>
-            <ul>
-              <li>Ryzen mid-range + RTX</li>
-              <li>32GB RAM · fast NVMe</li>
-              <li>1440p edit &amp; stream</li>
-              <li>Clean Windows, no bloat</li>
-            </ul>
-            <a class="btn btn-primary btn-sm" style="width:100%" href="https://buy.stripe.com/5kQ7sM6s32X61H8fXv0ZW06">Buy Creator</a>
-          </article>
-          <article class="card product">
-            <img class="pc-img" src="assets/procreater.jpg" alt="Pro Creator PC" />
-            <p class="kicker">PC Build · popular</p>
-            <h3>Pro Creator · $1,899</h3>
-            <p class="blurb">Higher-tier GPU and more cores. 4K timelines, long sessions, real multitasking.</p>
-            <ul>
-              <li>Higher-tier GPU + cores</li>
-              <li>4K-capable timelines</li>
-              <li>Long-session thermals</li>
-              <li>Clean Windows, no bloat</li>
-            </ul>
-            <a class="btn btn-accent btn-sm" style="width:100%" href="https://buy.stripe.com/00w8wQ8AbbtCadE8v30ZW07">Buy Pro Creator</a>
-          </article>
-          <article class="card product">
-            <img class="pc-img" src="assets/flagship.jpg" alt="Flagship PC" />
-            <p class="kicker">PC Build</p>
-            <h3>Flagship · $2,799</h3>
-            <p class="blurb">Top-tier parts for 4K / 8K, 3D, and heavy AI workloads. Future-proof, no fluff.</p>
-            <ul>
-              <li>Top-tier components</li>
-              <li>4K / 8K · 3D · AI loads</li>
-              <li>Quiet high-power cooling</li>
-              <li>Clean Windows, no bloat</li>
-            </ul>
-            <a class="btn btn-primary btn-sm" style="width:100%" href="https://buy.stripe.com/6oU3cw6s3cxGgC23aJ0ZW08">Buy Flagship</a>
-          </article>
-        </div>
-        <p class="subtle" style="margin-top:32px;font-size:12px">Custom configs $900–$3,000. Built to order. US shipping quoted after payment.</p>
-      </div>
-    </section>
+<div class="grid-3" style="margin-top:40px">
+<article class="card">
+<p class="kicker">Site</p>
+<h3 style="margin-top:12px">Business website</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Multi-page site with forms and integrations for a service business. Mobile-ready and on-brand.</p>
+</article>
+<article class="card">
+<p class="kicker">Landing</p>
+<h3 style="margin-top:12px">Landing page</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Single conversion page with form, analytics, and clear call-to-action.</p>
+</article>
+<article class="card">
+<p class="kicker">AI</p>
+<h3 style="margin-top:12px">AI feature</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Site plus a working AI tool and workflow integrations for real use.</p>
+</article>
+<article class="card">
+<p class="kicker">App</p>
+<h3 style="margin-top:12px">Business app</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Custom app for a specific internal or customer workflow. Clean and secure.</p>
+</article>
+<article class="card">
+<p class="kicker">Marketing</p>
+<h3 style="margin-top:12px">Marketing site</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Site with conversion paths and content structure built for campaigns.</p>
+</article>
+<article class="card">
+<p class="kicker">Custom</p>
+<h3 style="margin-top:12px">Custom system</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Combined site, app, and AI built for a unique business need.</p>
+</article>
+</div>
 
-    <section id="creators">
-      <div class="wrap">
-        <p class="section-kicker">For content creators</p>
-        <h2 style="font-size:clamp(1.8rem,3vw,2.4rem)">Tools built for people who create.</h2>
-        <p class="muted" style="margin-top:16px;max-width:36rem;font-size:14px;line-height:1.6">Not required to buy a site or a PC. Drop in ideas, get a ranked plan. Join the waitlist for the full system.</p>
-        <div class="grid-3" style="margin-top:40px">
-          <article class="card">
-            <div style="display:flex;justify-content:space-between"><span class="mono">01</span><span class="badge">Live beta</span></div>
-            <h3 style="margin-top:16px">Content Planning System</h3>
-            <p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Drop in ideas. Get ranked angles, an outline, and a week view.</p>
-          </article>
-          <article class="card">
-            <div style="display:flex;justify-content:space-between"><span class="mono">02</span><span class="badge">Live beta</span></div>
-            <h3 style="margin-top:16px">One-to-Many Repurposing</h3>
-            <p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">One long piece in. Shorts, threads, carousels, newsletter out.</p>
-          </article>
-          <article class="card">
-            <div style="display:flex;justify-content:space-between"><span class="mono">03</span><span class="badge">Live beta</span></div>
-            <h3 style="margin-top:16px">AI Chat</h3>
-            <p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">A private chat trained for creators and builders. Hooks, outlines, packaging.</p>
-          </article>
-        </div>
-        <div class="card" style="margin-top:24px">
-          <p class="kicker">Planner</p>
-          <textarea id="ideas" rows="5" style="margin-top:12px">Why most creators burn out in year 2
+<p class="subtle" style="margin-top:28px;font-size:13px;max-width:36rem">We build whatever the business needs — sites, apps, AI, or marketing tools.</p>
+</div>
+</section>
+
+<section id="services">
+<div class="wrap">
+<p class="section-kicker">Services</p>
+<h2 style="font-size:clamp(1.9rem,3.2vw,2.6rem)">What we build.</h2>
+<p class="muted" style="margin-top:16px;max-width:38rem;font-size:15px;line-height:1.65">Custom websites, apps, AI systems, and marketing tools for any business. Built by a team of experts, including an AI engineer.</p>
+<div class="grid-4" style="margin-top:40px">
+<article class="card product">
+<p class="kicker">Web</p>
+<h3>Websites</h3>
+<p class="blurb">Custom sites from one-page landings to full multi-page business sites. Mobile-ready with forms.</p>
+<ul>
+<li>Landing pages</li>
+<li>Multi-page sites</li>
+<li>Forms & integrations</li>
+<li>SEO basics</li>
+</ul>
+<a class="btn btn-primary btn-sm" style="width:100%" href="#contact">Discuss a site</a>
+</article>
+<article class="card product">
+<p class="kicker">Apps</p>
+<h3>Apps</h3>
+<p class="blurb">Custom business apps for internal tools, customer portals, or specific workflows.</p>
+<ul>
+<li>Internal tools</li>
+<li>Customer apps</li>
+<li>Workflow systems</li>
+<li>Secure backends</li>
+</ul>
+<a class="btn btn-primary btn-sm" style="width:100%" href="#contact">Discuss an app</a>
+</article>
+<article class="card product popular-ring">
+<p class="kicker">AI</p>
+<h3>AI Systems</h3>
+<p class="blurb">Working AI features, agents, and integrations for real business use.</p>
+<ul>
+<li>Custom AI features</li>
+<li>Agents & copilots</li>
+<li>Workflow integrations</li>
+<li>Production ready</li>
+</ul>
+<a class="btn btn-accent btn-sm" style="width:100%" href="#contact">Discuss AI</a>
+</article>
+<article class="card product">
+<p class="kicker">Marketing</p>
+<h3>Marketing</h3>
+<p class="blurb">Marketing systems, conversion setups, and growth tools built around the business.</p>
+<ul>
+<li>Conversion systems</li>
+<li>Content structure</li>
+<li>Campaign tools</li>
+<li>Site & app integration</li>
+</ul>
+<a class="btn btn-primary btn-sm" style="width:100%" href="#contact">Discuss marketing</a>
+</article>
+</div>
+<p class="subtle" style="margin-top:32px;font-size:12px">Anything else your business needs — we build that too. You get the files. Optional monthly management with 24/7 support.</p>
+</div>
+</section>
+
+<section id="ownership">
+<div class="wrap">
+<p class="section-kicker">After launch</p>
+<h2 style="font-size:clamp(1.9rem,3.2vw,2.6rem)">You own it.</h2>
+<p class="muted" style="margin-top:16px;max-width:40rem;font-size:15px;line-height:1.65">Every build is custom. After launch you can take the files or keep our team on.</p>
+<div class="grid-2" style="margin-top:40px">
+<article class="ownership-card">
+<p class="step-num">01 · Self-managed</p>
+<h3>Files + guide</h3>
+<p class="blurb">Full source files and a written guide so you can update content and make changes yourself.</p>
+<ul>
+<li>Complete source files</li>
+<li>Edit guide</li>
+<li>No monthly fee</li>
+<li>You control hosting</li>
+</ul>
+</article>
+<article class="ownership-card">
+<p class="step-num">02 · Managed</p>
+<h3>Monthly + 24/7</h3>
+<p class="blurb">We handle updates, fixes, and upkeep. 24/7 support available. You still own the files.</p>
+<ul>
+<li>Content updates</li>
+<li>Small fixes</li>
+<li>Direct team access</li>
+<li>24/7 support option</li>
+</ul>
+</article>
+</div>
+<p class="subtle" style="margin-top:28px;font-size:13px;max-width:36rem">You decide after the build ships.</p>
+</div>
+</section>
+
+<section id="hardware">
+<div class="wrap">
+<p class="section-kicker">Hardware</p>
+<h2 style="font-size:clamp(1.9rem,3.2vw,2.6rem)">Custom PCs.</h2>
+<p class="muted" style="margin-top:16px;max-width:36rem;font-size:15px;line-height:1.65">Clean installs for creators and power users. Built to order.</p>
+<div class="grid-3" style="margin-top:40px">
+<article class="card product">
+<img class="pc-img" src="assets/creater.jpg" alt="Creator PC" />
+<p class="kicker">PC</p>
+<h3>Creator</h3>
+<p class="blurb">Ryzen + RTX. 32GB RAM, fast NVMe. For 1440p editing and streaming.</p>
+<ul>
+<li>Ryzen + RTX</li>
+<li>32GB RAM</li>
+<li>Fast NVMe</li>
+<li>Clean Windows</li>
+</ul>
+<a class="btn btn-primary btn-sm" style="width:100%" href="#contact">Discuss</a>
+</article>
+<article class="card product popular-ring">
+<img class="pc-img" src="assets/procreater.jpg" alt="Pro Creator PC" />
+<p class="kicker">PC · popular</p>
+<h3>Pro Creator</h3>
+<p class="blurb">Higher-tier GPU and more cores. For 4K timelines and long sessions.</p>
+<ul>
+<li>Higher-tier GPU</li>
+<li>More cores</li>
+<li>4K capable</li>
+<li>Clean Windows</li>
+</ul>
+<a class="btn btn-accent btn-sm" style="width:100%" href="#contact">Discuss</a>
+</article>
+<article class="card product">
+<img class="pc-img" src="assets/flagship.jpg" alt="Flagship PC" />
+<p class="kicker">PC</p>
+<h3>Flagship</h3>
+<p class="blurb">Top-tier parts for 4K/8K, 3D, and heavy AI workloads.</p>
+<ul>
+<li>Top-tier parts</li>
+<li>4K / 8K / 3D</li>
+<li>AI workloads</li>
+<li>Quiet cooling</li>
+</ul>
+<a class="btn btn-primary btn-sm" style="width:100%" href="#contact">Discuss</a>
+</article>
+</div>
+<p class="subtle" style="margin-top:32px;font-size:12px">Custom configs available. Built to order.</p>
+</div>
+</section>
+
+<section id="creators">
+<div class="wrap">
+<p class="section-kicker">Tools</p>
+<h2 style="font-size:clamp(1.9rem,3.2vw,2.6rem)">Creator tools.</h2>
+<p class="muted" style="margin-top:16px;max-width:36rem;font-size:15px;line-height:1.65">Planning and repurposing tools for creators and businesses. Currently in beta.</p>
+<div class="grid-3" style="margin-top:40px">
+<article class="card">
+<div style="display:flex;justify-content:space-between"><span class="mono">01</span><span class="badge">Beta</span></div>
+<h3 style="margin-top:16px">Content Planning</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Drop in ideas. Get ranked angles and a week view.</p>
+</article>
+<article class="card">
+<div style="display:flex;justify-content:space-between"><span class="mono">02</span><span class="badge">Beta</span></div>
+<h3 style="margin-top:16px">Repurposing</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">One long piece in. Shorts, threads, and newsletters out.</p>
+</article>
+<article class="card">
+<div style="display:flex;justify-content:space-between"><span class="mono">03</span><span class="badge">Beta</span></div>
+<h3 style="margin-top:16px">AI Chat</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Private chat for hooks, outlines, and packaging.</p>
+</article>
+</div>
+<div class="card" style="margin-top:24px">
+<p class="kicker">Planner</p>
+<textarea id="ideas" rows="5" style="margin-top:12px">Why most creators burn out in year 2
 My exact weekly content system
 Tools I actually use vs tools I recommend
 How I batch 12 videos in one day</textarea>
-          <button class="btn btn-accent" style="margin-top:12px" type="button" onclick="rankIdeas()">Rank ideas</button>
-          <div id="plan-out"></div>
-        </div>
-        <div class="card" style="margin-top:20px;max-width:36rem">
-          <span class="badge">Beta</span>
-          <h3 style="margin-top:12px">Get early access</h3>
-          <p class="muted" style="margin:8px 0 16px;font-size:14px">Be first when the full Content Planning System and One-to-Many tools open.</p>
-          <form action="https://formspree.io/f/mdenkran" method="POST" style="display:flex;gap:12px;flex-wrap:wrap">
-            <input type="email" name="email" required placeholder="you@email.com" style="flex:1;min-width:200px" />
-            <input type="hidden" name="_subject" value="VSIT Labs — Creator Tools Waitlist" />
-            <button class="btn btn-accent" type="submit">Join waitlist</button>
-          </form>
-        </div>
-        <div class="card" style="margin-top:20px;max-width:36rem">
-          <span class="badge">Beta</span>
-          <h3 style="margin-top:12px">AI Chat — early access</h3>
-          <p class="muted" style="margin:8px 0 16px;font-size:14px">A private AI chat trained for creators and builders. Currently in closed beta.</p>
-          <a class="btn btn-ghost btn-sm" href="mailto:vsitsecure@gmail.com?subject=AI%20Chat%20Beta%20Access">Request beta access →</a>
-        </div>
-      </div>
-    </section>
+<button class="btn btn-accent" style="margin-top:12px" type="button" onclick="rankIdeas()">Rank ideas</button>
+<div id="plan-out"></div>
+</div>
+<div class="card" style="margin-top:20px;max-width:36rem">
+<span class="badge">Beta</span>
+<h3 style="margin-top:12px">Early access</h3>
+<p class="muted" style="margin:8px 0 16px;font-size:14px">Join the waitlist for the full tools.</p>
+<form action="https://formspree.io/f/mdenkran" method="POST" style="display:flex;gap:12px;flex-wrap:wrap">
+<input type="email" name="email" required placeholder="you@email.com" style="flex:1;min-width:200px" />
+<input type="hidden" name="_subject" value="VSIT Labs — Creator Tools Waitlist" />
+<button class="btn btn-accent" type="submit">Join waitlist</button>
+</form>
+</div>
+<div class="card" style="margin-top:20px;max-width:36rem">
+<span class="badge">Beta</span>
+<h3 style="margin-top:12px">AI Chat access</h3>
+<p class="muted" style="margin:8px 0 16px;font-size:14px">Closed beta. Request access.</p>
+<a class="btn btn-ghost btn-sm" href="mailto:vsitsecure@gmail.com?subject=AI%20Chat%20Beta%20Access">Request access →</a>
+</div>
+</div>
+</section>
 
-    <section>
-      <div class="wrap">
-        <p class="section-kicker">How payment works</p>
-        <h2 style="font-size:clamp(1.8rem,3vw,2.4rem)">Three steps. Then we build.</h2>
-        <div class="grid-3" style="margin-top:40px">
-          <article class="card"><p class="mono">1</p><h3 style="margin-top:12px">Pick the work</h3><p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Site package, deposit, or a custom PC. Prices are on the page.</p></article>
-          <article class="card"><p class="mono">2</p><h3 style="margin-top:12px">Pay on Stripe</h3><p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Card or wallet. You get a receipt immediately.</p></article>
-          <article class="card"><p class="mono">3</p><h3 style="margin-top:12px">We start</h3><p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Kickoff email the same day. Builds move only after payment.</p></article>
-        </div>
-      </div>
-    </section>
+<section>
+<div class="wrap">
+<p class="section-kicker">Process</p>
+<h2 style="font-size:clamp(1.9rem,3.2vw,2.6rem)">How it works.</h2>
+<div class="grid-3" style="margin-top:40px">
+<article class="card">
+<p class="mono">1</p>
+<h3 style="margin-top:12px">Tell us what you need</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Site, app, AI, marketing, or something specific to your business.</p>
+</article>
+<article class="card">
+<p class="mono">2</p>
+<h3 style="margin-top:12px">We build it</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Custom from scratch. No templates.</p>
+</article>
+<article class="card">
+<p class="mono">3</p>
+<h3 style="margin-top:12px">You own it</h3>
+<p class="muted" style="margin-top:8px;font-size:14px;line-height:1.55">Take the files, or keep us on for management with 24/7 support.</p>
+</article>
+</div>
+</div>
+</section>
 
-    <section id="contact" style="padding-bottom:120px">
-      <div class="wrap">
-        <div class="cta-band">
-          <span class="badge">Accepting new builds</span>
-          <h2 style="margin-top:24px;font-size:clamp(1.8rem,3vw,2.4rem)">Ready to ship something real?</h2>
-          <p class="muted" style="margin:16px auto 0;max-width:28rem">Pay the deposit to start a site, grab a fixed package, or order a PC. Checkout is live.</p>
-          <div class="row" style="justify-content:center">
-            <a class="btn btn-primary" href="https://buy.stripe.com/3cI8wQ03F2X6adE5iR0ZW09">Pay deposit — start build</a>
-            <a class="btn btn-ghost" href="mailto:vsitsecure@gmail.com">Email vsitsecure@gmail.com</a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+<section id="contact" style="padding-bottom:120px">
+<div class="wrap">
+<div class="cta-band">
+<span class="badge">Accepting projects</span>
+<h2 style="margin-top:24px;font-size:clamp(1.9rem,3.2vw,2.6rem)">What do you need built?</h2>
+<p class="muted" style="margin:16px auto 0;max-width:30rem;font-size:15px;line-height:1.6">Custom websites, apps, AI systems, or marketing tools for your business.</p>
+<div class="row" style="justify-content:center">
+<a class="btn btn-primary" href="mailto:vsitsecure@gmail.com">Email vsitsecure@gmail.com</a>
+<a class="btn btn-ghost" href="#services">See services</a>
+</div>
+</div>
+</div>
+</section>
+</main>
 
-  <footer>
-    <div class="wrap foot">
-      <div>VSIT Labs · Checkout live</div>
-      <a href="mailto:vsitsecure@gmail.com" style="text-decoration:none">vsitsecure@gmail.com</a>
-      <span>© 2026</span>
-    </div>
-  </footer>
+<footer>
+<div class="wrap foot">
+<div>VSIT Labs · Custom builds · Team of experts</div>
+<a href="mailto:vsitsecure@gmail.com" style="text-decoration:none">vsitsecure@gmail.com</a>
+<span>© 2026</span>
+</div>
+</footer>
 
-  <div class="sticky">
-    <a class="btn btn-primary" href="https://buy.stripe.com/3cI8wQ03F2X6adE5iR0ZW09">Pay $500 deposit</a>
-  </div>
+<div class="sticky">
+<a class="btn btn-primary" href="#contact">Talk to us</a>
+</div>
 
-  <script>
-    function rankIdeas() {
-      const lines = document.getElementById("ideas").value.split(/\n+/).map((s) => s.replace(/^[-*\d.\s]+/, "").trim()).filter(Boolean);
-      const ranked = lines.map((title) => {
-        let score = 70 + Math.min(title.length, 24);
-        if (/how i|system|batch|exact/i.test(title)) score += 8;
-        if (/why|burn|vs /i.test(title)) score += 3;
-        return { title, score: Math.min(99, score) };
-      }).sort((a, b) => b.score - a.score);
-      const top = ranked[0] ? ranked[0].title : "your next piece";
-      document.getElementById("plan-out").innerHTML =
-        ranked.map((r) => '<div class="ranked"><span>' + r.title + '</span><span class="mono">' + r.score + '</span></div>').join("") +
-        '<div class="card" style="margin-top:16px;padding:16px"><p class="muted" style="margin:0;font-size:14px"><strong style="color:var(--fg)">Hook:</strong> I used to stall on “' + top + '.” Here’s the system.</p><p class="kicker" style="margin-top:16px">This week</p><p class="muted" style="margin:8px 0 0;font-size:14px">Mon — batch 4 shorts<br/>Wed — long-form: ' + top + '<br/>Fri — newsletter + thread</p></div>';
-    }
-  </script>
+<script>
+function rankIdeas() {
+const lines = document.getElementById("ideas").value.split(/\n+/).map((s) => s.replace(/^[-*\d.\s]+/, "").trim()).filter(Boolean);
+const ranked = lines.map((title) => {
+let score = 70 + Math.min(title.length, 24);
+if (/how i|system|batch|exact/i.test(title)) score += 8;
+if (/why|burn|vs /i.test(title)) score += 3;
+return { title, score: Math.min(99, score) };
+  }).sort((a, b) => b.score - a.score);
+const top = ranked[0] ? ranked[0].title : "your next piece";
+document.getElementById("plan-out").innerHTML =
+ranked.map((r) => '<div class="ranked"><span>' + r.title + '</span><span class="mono">' + r.score + '</span></div>').join("") +
+'<div class="card" style="margin-top:16px;padding:16px"><p class="muted" style="margin:0;font-size:14px"><strong style="color:var(--fg)">Hook:</strong> I used to stall on “' + top + '.” Here’s the system.</p><p class="kicker" style="margin-top:16px">This week</p><p class="muted" style="margin:8px 0 0;font-size:14px">Mon — batch 4 shorts<br/>Wed — long-form: ' + top + '<br/>Fri — newsletter + thread</p></div>';
+}
+</script>
 </body>
 </html>
